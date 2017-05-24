@@ -1,0 +1,38 @@
+{
+  "name": "coppice",
+  "description": "A framework for building web applications",
+  "version": "1.0.0",
+  "main": "dist/coppice.js",
+  "module": "src/index.js",
+  "author": "Brandon Chartier",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brandonchartier/coppice.git"
+  },
+  "bugs": {
+    "url": "https://github.com/brandonchartier/coppice/issues"
+  },
+  "homepage": "https://github.com/brandonchartier/coppice#README",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "keywords": [],
+  "scripts": {
+    "build": "rollup -cm -n coppice -f umd -i src/index.js -o dist/coppice.js",
+    "prepublish": "npm run build",
+    "test": "tap test/**/*.js --reporter=spec",
+    "test:coverage": "tap test/**/*.js --cov --coverage-report=html"
+  },
+  "dependencies": {
+    "virtual-dom": "2.1.1"
+  },
+  "devDependencies": {
+    "rollup": "0.41.6",
+    "rollup-plugin-buble": "0.15.0",
+    "rollup-plugin-commonjs": "8.0.2",
+    "rollup-plugin-node-resolve": "3.0.0",
+    "rollup-plugin-uglify": "2.0.1"
+  }
+}
