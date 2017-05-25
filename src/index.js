@@ -1,12 +1,24 @@
-import createElement from 'virtual-dom/create-element';
-import diff from 'virtual-dom/diff';
-import hyperscript from 'virtual-dom/h';
-import patch from 'virtual-dom/patch';
+import { patch, h as hyperscript } from 'turbodom';
 
 export const h = hyperscript;
 
+export const mount = (selector = 'body', app) => {
+	document.querySelector(selector).appendChild(app);
+};
+
 export const program = ({ model = {}, update = {}, view }) => {
-	let root, tree;
+	let element, oldNode;
+	let root = document.createElement(null);
+
+	// View
+	const render = newNode => {
+		return (element = patch(
+			root,
+			element,
+			oldNode,
+			(oldNode = newNode)
+		));
+	};
 
 	// Update
 	Object.keys(update).forEach(key => {
@@ -19,23 +31,9 @@ export const program = ({ model = {}, update = {}, view }) => {
 				...payload
 			));
 
-			const newTree = view(model, update);
-			const patches = diff(tree, newTree);
-
-			root = patch(root, patches);
-			tree = newTree;
+			render(view(model, update));
 		};
 	});
 
-	// View
-	tree = view(model, update);
-	root = createElement(tree);
-
-	const mount = (selector = 'body') => {
-		const el = document.querySelector(selector);
-
-		return el.appendChild(root);
-	};
-
-	return { mount };
+	return render(view(model, update));
 };
