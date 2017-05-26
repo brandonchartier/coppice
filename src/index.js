@@ -1,8 +1,8 @@
-import { patch, h as hyperscript } from 'turbodom';
+import { patch, h } from 'turbodom';
 
-export const h = hyperscript;
+export const html = h;
 
-export const mount = (selector = 'body', app) => {
+export const mount = (app, selector = 'body') => {
 	document.querySelector(selector).appendChild(app);
 };
 
@@ -11,14 +11,14 @@ export const program = ({ model = {}, update = {}, view }) => {
 	let root = document.createElement(null);
 
 	// View
-	const render = newNode => {
-		return (element = patch(
+	const render = newNode => (
+		element = patch(
 			root,
 			element,
 			oldNode,
 			(oldNode = newNode)
-		));
-	};
+		)
+	);
 
 	// Update
 	Object.keys(update).forEach(key => {
