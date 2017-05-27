@@ -1,6 +1,6 @@
 {
   "name": "coppice",
-  "description": "A framework for building web applications",
+  "description": "A functional framework for building web applications",
   "version": "0.9.0",
   "main": "dist/coppice.js",
   "module": "src/index.js",
@@ -24,7 +24,7 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
-    "turbodom": "0.0.5"
+    "picodom": "0.0.6"
   },
   "devDependencies": {
     "rollup": "0.41.6",

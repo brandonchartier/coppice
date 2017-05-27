@@ -1,4 +1,4 @@
-import { patch, h } from 'turbodom';
+import { patch, h } from 'picodom';
 
 export const html = h;
 
