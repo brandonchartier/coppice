@@ -4,6 +4,12 @@ A functional `this`-less framework for creating web UIs.
 
 ---
 
+## Installation
+
+`npm install --save coppice`
+
+---
+
 ## Sample
 
 ```js
@@ -73,7 +79,7 @@ Contains functions that will update your state. Functions must return the parts 
 
 `view: (state, msg) => (...)`
 
-A function that returns a pure representation of your state. Can be written in JSX, or anything that can compile down to hyperscript - `html` is provided by the framework, as a way to begin writing programs quickly.
+A function that returns a pure representation of your state. Can be written in JSX, or anything that can compile down to hyperscript - `h` is provided by the framework, as a way to begin writing programs quickly.
 
 ### H
 
@@ -105,7 +111,7 @@ A function that allows you to attach your program to an element of the DOM. `sel
 
 ### Quick start
 
-Coppice App gets you running in seconds. It comes preloaded with the encouraged defaults - Webpack, Babel, and JSX. `npm run dev` sets up a dev server with hot module replacement and `npm run build` produces a production-ready program.
+Coppice App (coming soon) gets you running in seconds. It comes preloaded with the encouraged defaults - Webpack, Babel, and JSX. `npm run dev` sets up a dev server with hot module replacement and `npm run build` produces a production-ready program.
 
 ---
 
