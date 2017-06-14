@@ -111,7 +111,7 @@ A function that allows you to attach your program to an element of the DOM. `sel
 
 ### Quick start
 
-Coppice App (coming soon) gets you running in seconds. It comes preloaded with the encouraged defaults - Webpack, Babel, and JSX. `npm run dev` sets up a dev server with hot module replacement and `npm run build` produces a production-ready program.
+[Coppice App](https://github.com/brandonchartier/coppice-app) gets you running in seconds. It comes preloaded with the encouraged defaults - Webpack, Babel, and JSX. `npm run dev` sets up a dev server with hot module replacement and `npm run build` produces a production-ready program.
 
 ---
 
