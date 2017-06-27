@@ -17,13 +17,9 @@ export const program = ({ model = {}, update = {}, view }) => {
     const msg = update[key];
 
     update[key] = (...payload) => {
-      Object.assign(model, msg(
-        model,
-        update,
-        ...payload
-      ));
+      Object.assign(model, msg(...payload, update)(model));
 
-      const newTree = view(model, update);
+      const newTree = view(update)(model);
       const patches = diff(tree, newTree);
 
       tree = newTree;
@@ -32,7 +28,7 @@ export const program = ({ model = {}, update = {}, view }) => {
   });
 
   // View
-  tree = view(model, update);
+  tree = view(update)(model);
   root = create(tree);
 
   return root;
