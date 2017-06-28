@@ -1,7 +1,4 @@
-import create from 'virtual-dom/create-element';
-import diff from 'virtual-dom/diff';
-import hyperscript from 'virtual-dom/h';
-import patch from 'virtual-dom/patch';
+import { patch, h as hyperscript } from 'picodom';
 
 export const h = hyperscript;
 
@@ -10,7 +7,18 @@ export const mount = (app, selector = 'body') => {
 };
 
 export const program = ({ model = {}, update = {}, view }) => {
-  let root, tree;
+  let element, oldNode;
+  let root = document.createElement(null);
+
+  // View
+  const render = newNode => (
+    element = patch(
+      root,
+      element,
+      oldNode,
+      (oldNode = newNode)
+    )
+  );
 
   // Update
   Object.keys(update).forEach(key => {
@@ -19,17 +27,9 @@ export const program = ({ model = {}, update = {}, view }) => {
     update[key] = (...payload) => {
       Object.assign(model, msg(...payload, update)(model));
 
-      const newTree = view(update)(model);
-      const patches = diff(tree, newTree);
-
-      tree = newTree;
-      root = patch(root, patches);
+      render(view(update)(model));
     };
   });
 
-  // View
-  tree = view(update)(model);
-  root = create(tree);
-
-  return root;
+  return render(view(update)(model));
 };

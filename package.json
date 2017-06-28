@@ -26,7 +26,7 @@
     "test:coverage": "tap test/**/*.js --cov --coverage-report=html"
   },
   "dependencies": {
-    "virtual-dom": "2.1.1"
+    "picodom": "0.0.6"
   },
   "devDependencies": {
     "rollup": "0.41.6",

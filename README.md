@@ -115,7 +115,7 @@ A function that allows you to attach your program to an element of the DOM. `sel
 
 ### Differences between other frameworks
 
-- Although the library is only 5-6 kB gzipped, Coppice is not totally concerned about filesize. Check out the Roadmap for planned features.
+- Although the library is only 1-2 kB gzipped, Coppice is not totally concerned about filesize. Check out the Roadmap for planned features.
 - Always returns the state of the application last. This makes updates and views simple to integrate with other functional libraries, such as Ramda, where functions generally expect data last.
 - Single state - No local state between views, which erases the complexity of managing parent/child communication. See Redux, Vuex or The Elm Architecture to understand why this is beneficial.
 - Focused on reusable functions instead of reusable components.
