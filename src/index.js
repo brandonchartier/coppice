@@ -32,7 +32,7 @@ export const program = ({ model = {}, update = {}, action = {}, view }) => {
   const dispatch = curry((type, payload) => {
     const fn = action[type];
 
-    fn(payload, { commit, dispatch });
+    fn({ commit, dispatch }, payload);
   });
 
   return render(view({ commit, dispatch })(model));
