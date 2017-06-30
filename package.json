@@ -1,7 +1,7 @@
 {
   "name": "coppice",
   "description": "A framework for building web applications",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "main": "dist/coppice.js",
   "module": "src/index.js",
   "author": "Brandon Chartier",
@@ -26,6 +26,8 @@
     "test:coverage": "tap test/**/*.js --cov --coverage-report=html"
   },
   "dependencies": {
+    "just-curry-it": "2.0.1",
+    "just-extend": "1.1.22",
     "picodom": "0.0.6"
   },
   "devDependencies": {

@@ -1,3 +1,5 @@
+import curry from 'just-curry-it';
+import extend from 'just-extend';
 import { patch, h as hyperscript } from 'picodom';
 
 export const h = hyperscript;
@@ -6,11 +8,10 @@ export const mount = (app, selector = 'body') => {
   document.querySelector(selector).appendChild(app);
 };
 
-export const program = ({ model = {}, update = {}, view }) => {
+export const program = ({ model = {}, update = {}, action = {}, view }) => {
   let element, oldNode;
   let root = document.createElement(null);
 
-  // View
   const render = newNode => (
     element = patch(
       root,
@@ -20,16 +21,19 @@ export const program = ({ model = {}, update = {}, view }) => {
     )
   );
 
-  // Update
-  Object.keys(update).forEach(key => {
-    const msg = update[key];
+  const commit = curry((type, payload) => {
+    const fn = update[type];
 
-    update[key] = (...payload) => {
-      Object.assign(model, msg(...payload, update)(model));
+    extend(model, fn(payload)(model));
 
-      render(view(update)(model));
-    };
+    render(view({ commit, dispatch })(model));
   });
 
-  return render(view(update)(model));
+  const dispatch = curry((type, payload) => {
+    const fn = action[type];
+
+    fn(payload, { commit, dispatch });
+  });
+
+  return render(view({ commit, dispatch })(model));
 };
