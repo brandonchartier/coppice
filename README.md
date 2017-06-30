@@ -32,7 +32,7 @@ const counter = program({
       <h1>{state.count}</h1>
       <button onclick={ctx.commit('inc')}>+</button>
       <button onclick={ctx.commit('dec')} disabled={state.count <= 0}>-</button>
-      <button onclick={_ => ctx.dispatch('add', 5)}>+5</button>
+      <button onclick={_ => ctx.dispatch('wait', 5)}>+5</button>
     </div>
   )
 });
