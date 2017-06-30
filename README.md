@@ -24,12 +24,15 @@ const counter = program({
     dec: _ => state => ({ count: state.count - 1 }),
     add: n => state => ({ count: state.count + n })
   },
-  view: msg => state => (
+  action: {
+    wait: (ctx, n) => setTimeout(() => ctx.commit('add', n), 1000)
+  },
+  view: ctx => state => (
     <div>
       <h1>{state.count}</h1>
-      <button onclick={msg.increment}>+</button>
-      <button onclick={msg.decrement} disabled={state.count <= 0}>-</button>
-      <button onclick={_ => msg.add(5)}>+5</button>
+      <button onclick={ctx.commit('inc')}>+</button>
+      <button onclick={ctx.commit('dec')} disabled={state.count <= 0}>-</button>
+      <button onclick={_ => ctx.dispatch('add', 5)}>+5</button>
     </div>
   )
 });
@@ -41,9 +44,7 @@ Or, when using Ramda, the `update` will look like this:
 
 ```js
 const count = r.over(r.lensProp('count'));
-
 ...
-
 {
   inc: _ => count(r.inc),
   dec: _ => count(r.dec),
@@ -57,7 +58,7 @@ const count = r.over(r.lensProp('count'));
 
 ### Program
 
-`program({ model, update, view })`
+`program({ model, update, action, view })`
 
 Takes an object with a `model`, an `update`, and a `view`. Technically, only a `view` is required.
 
@@ -65,6 +66,7 @@ Takes an object with a `model`, an `update`, and a `view`. Technically, only a `
 const app = program({
   model: {...},
   update: {...},
+  action: {...},
   view: msg => state => (...),
 });
 ```
@@ -77,19 +79,48 @@ An object that initializes the state of your program.
 
 #### Update
 
-`update: { fn: (data, msg) => state => (...) }`
+`update: { fn: payload => state => (...) }`
 
-Contains functions that will update your state. Functions must return the parts of the state that they wish to change. When an update returns, the view is automatically rendered with the new state, if any changes occurred.
+Contains functions that will update your state. Functions must return the parts of the state that they wish to change. When an update returns, the view is automatically rendered with the new state, if any changes occurred. Updates must be synchronous.
 
-- `data` refers to the first argument when called. For example, in the case of an `onclick` event, data would be the `event` object, allowing you to access `event.target.value`.
-- `msg` refers to the update object itself, allowing you to run multiple actions, and async operations.
+- `payload` refers to the first argument when called. For example, in the case of an `onclick` event, payload would be the `event` object, allowing you to access `event.target.value`.
 - `state` refers to the current state of your program, which was initialized with the model passed into the program originally.
+
+#### Commit
+
+`commit('type', payload)`
+
+A curried function that commits an `update` to the state of your program.
+
+- `type` is the specific update name to call.
+- `payload` is an object that represents the changes you would like to make to the program's state.
+
+#### Dispatch
+
+`dispatch('type', payload)`
+
+A curried function that dispatches an action.
+
+- `type` is the specific action name to call.
+- `payload` is an object of data that you would like to call an action with.
+
+#### Action
+
+`action: { fn: (ctx, payload) => (...) }`
+
+Contains functions that will commit updates. Actions can be asynchronous.
+
+- `ctx` is an object that contains the `commit` and `dispatch` functions.
+- `payload` refers to the first argument when called. For example, in the case of an `onclick` event, payload would be the `event` object, allowing you to access `event.target.value`.
 
 #### View
 
-`view: msg => state => (...)`
+`view: ctx => state => (...)`
 
 A function that returns a pure representation of your state. Can be written in JSX, or anything that can compile down to hyperscript - `h` is provided by the framework, as a way to begin writing programs quickly.
+
+- `ctx` is an object that contains the `commit` and `dispatch` functions.
+- `state` refers to the state of your program.
 
 ### H
 
