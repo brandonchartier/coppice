@@ -129,7 +129,7 @@ Contains functions that will update your state. Functions must return the parts 
 
 `action: { fn: (ctx, payload) => (...) }`
 
-Contains functions that will commit updates. Actions can be asynchronous.
+Contains functions that will commit updates or dispatch more actions. Actions can be asynchronous.
 
 - `ctx` is an object that contains the `commit` and `dispatch` functions.
 - `payload` refers to the payload sent by `dispatch`.
