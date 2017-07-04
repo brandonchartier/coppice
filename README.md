@@ -2,6 +2,10 @@
 
 A functional `this`-less framework for creating web UIs.
 
+
+> cop·pice ˈkäpəs<br>
+1. an area of woodland in which the trees or shrubs are, or formerly were, periodically cut back to ground level to stimulate growth and provide firewood or timber.
+
 ---
 
 ## Installation
@@ -25,14 +29,14 @@ const counter = program({
     add: n => state => ({ count: state.count + n })
   },
   action: {
-    wait: (ctx, n) => setTimeout(() => ctx.commit('add', n), 1000)
+    wait: ctx => setTimeout(() => ctx.commit('add', 5), 1000)
   },
   view: ctx => state => (
     <div>
       <h1>{state.count}</h1>
       <button onclick={ctx.commit('inc')}>+</button>
       <button onclick={ctx.commit('dec')} disabled={state.count <= 0}>-</button>
-      <button onclick={_ => ctx.dispatch('wait', 5)}>+5</button>
+      <button onclick={ctx.dispatch('wait')}>+5</button>
     </div>
   )
 });
@@ -40,16 +44,33 @@ const counter = program({
 mount(counter, '#app');
 ```
 
-Or, when using Ramda, the `update` will look like this:
+Or, when using Ramda:
 
 ```js
-const count = r.over(r.lensProp('count'));
-...
-{
-  inc: _ => count(r.inc),
-  dec: _ => count(r.dec),
-  add: n => count(r.add(n))
-}
+const countLens = r.lensProp('count');
+const overCount = r.over(countLens);
+
+const counter = program({
+  model: {
+    count: 0
+  },
+  update: {
+    inc: _ => overCount(r.inc),
+    dec: _ => overCount(r.dec),
+    add: n => overCount(r.add(n))
+  },
+  action: {
+    wait: ctx => setTimeout(() => ctx.commit('add', 5), 1000)
+  },
+  view: ctx => r.compose(count => (
+    <div>
+      <h1>{count}</h1>
+      <button onclick={ctx.commit('inc')}>+</button>
+      <button onclick={ctx.commit('dec')} disabled={count <= 0}>-</button>
+      <button onclick={ctx.dispatch('wait')}>+5</button>
+    </div>
+  ), r.view(countLens))
+});
 ```
 
 ---
@@ -60,14 +81,14 @@ const count = r.over(r.lensProp('count'));
 
 `program({ model, update, action, view })`
 
-Takes an object with a `model`, an `update`, and a `view`. Technically, only a `view` is required.
+Takes an object with a `model`, an `update`, an `action`, and a `view`. Technically, only a `view` is required.
 
 ```js
 const app = program({
   model: {...},
   update: {...},
   action: {...},
-  view: msg => state => (...),
+  view: ctx => state => (...),
 });
 ```
 
@@ -92,7 +113,7 @@ Contains functions that will update your state. Functions must return the parts 
 
 A curried function that commits an `update` to the state of your program.
 
-- `type` is the specific update name to call.
+- `type` is a string that specifies which update to call.
 - `payload` is an object that represents the changes you would like to make to the program's state.
 
 #### Dispatch
@@ -101,8 +122,8 @@ A curried function that commits an `update` to the state of your program.
 
 A curried function that dispatches an action.
 
-- `type` is the specific action name to call.
-- `payload` is an object of data that you would like to call an action with.
+- `type` is a string that specifies which action to call.
+- `payload` is a value that you would like to pass to your action.
 
 #### Action
 
@@ -132,25 +153,27 @@ An implementation of [hyperscript](https://github.com/hyperhype/hyperscript).
 
 `mount(program, selector)`
 
-A function that allows you to attach your program to an element of the DOM. `selector` defaults to "body".
+A function that allows you to attach your program to an element of the DOM.
+
+- `program` is your Coppice program.
+- `selector` is the class or id of the element (ex. "#app", or ".app"), defaults to "body".
 
 ---
 
 ### Prior Art
 
-- [This tweet](https://twitter.com/youyuxi/status/849993029012168705) from Evan You
 - [The Elm Architecture](https://guide.elm-lang.org/architecture/)
 - [Hyperapp](https://github.com/hyperapp/hyperapp)
+- [Redux](https://github.com/reactjs/redux) / [Veux](https://github.com/vuejs/vuex)
 - [The SAM Pattern](http://sam.js.org/)
-- [Ramda](http://ramdajs.com/)
 
 ### Differences between other frameworks
 
-- Although the library is only 1-2 kB gzipped, Coppice is not totally concerned about filesize. Check out the Roadmap for planned features.
-- Always returns the state of the application last. This makes updates and views simple to integrate with other functional libraries, such as Ramda, where functions generally expect data last.
-- Single state - No local state between views, which erases the complexity of managing parent/child communication. See Redux, Vuex or The Elm Architecture to understand why this is beneficial.
+- Although the framework is only 1-2 kB gzipped, Coppice is not totally concerned about filesize. Check out the Roadmap for planned features.
+- Always returns the state of the application last. This makes updates and views simple to integrate with other functional libraries, such as [Ramda](http://ramdajs.com/) or [lodash/fp](https://github.com/lodash/lodash/tree/4.17.4-npm/fp), where functions generally expect data last.
+- Single state: No local state between views, which erases the complexity of managing parent/child communication. See Redux, Vuex or The Elm Architecture to understand why this is beneficial.
 - Focused on reusable functions instead of reusable components.
-- Testability - testing updates is as easy as passing in dummy data and making sure it did what you wanted.
+- Testability - testing updates is as easy as passing in data and making sure it did what you wanted.
 
 ### Quick start
 
@@ -160,4 +183,5 @@ A function that allows you to attach your program to an element of the DOM. `sel
 
 ## Roadmap
 
-- Immutable state handling, for easier rollback to previous states.
+- Immutable state handling, to ease rolling back to previous states.
+- CLI for Coppice App, and adding examples, to make start-up simpler.
