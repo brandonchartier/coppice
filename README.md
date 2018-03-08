@@ -2,6 +2,7 @@
 
 A functional `this`-less framework for creating web UIs.
 
+*DEPRECATED* - Hyperapp has added a state-last approach and other goodies.
 
 > cop·pice ˈkäpəs<br>
 1. an area of woodland in which the trees or shrubs are, or formerly were, periodically cut back to ground level to stimulate growth and provide firewood or timber.
